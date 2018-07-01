@@ -66,32 +66,57 @@ char maquinaEstados (int entrada)
 
     if(timer)
         return INICIAL;
-    if(botao && estado_atual == INICIAL)
-        return ESPERA_BOTAO;
+
+    if(botao)
+        return ESPERA_BOTAO | RESET_PLACAR;
+    else if(estado_atual == INICIAL)
+        return INICIAL;
+
+
     if(!botao && estado_atual == ESPERA_BOTAO)
-        return SORTEIA | RESET_PLACAR;
+        return SORTEIA;
+    else if(estado_atual == ESPERA_BOTAO)
+        return ESPERA_BOTAO | RESET_PLACAR;;
+
     if(aleatorio == 1 && estado_atual == SORTEIA)
         return BURACO_1 | LED_1;
-    if(aleatorio == 2 && estado_atual == SORTEIA)
+    else if(aleatorio == 2 && estado_atual == SORTEIA)
         return BURACO_2 | LED_2;
-    if(aleatorio == 3 && estado_atual == SORTEIA)
+    else if(aleatorio == 3 && estado_atual == SORTEIA)
         return BURACO_3 | LED_3;
-    if(sensorB_1 && estado_atual == BURACO_1)
+    else if(estado_atual == SORTEIA)
+        return SORTEIA;
+
+    if(!sensorB_1 && estado_atual == BURACO_1)
         return AUMENTA_CONTADOR | ADD_PONTO;
-    if( (sensorB_2 || sensorB_3) && estado_atual == BURACO_1)
+    else if( (!sensorB_2 || !sensorB_3) && estado_atual == BURACO_1)
         return ZERA_PLACAR | RESET_PLACAR;
-    if(sensorB_2 && estado_atual == BURACO_2)
+    else if(estado_atual == BURACO_1)
+        return BURACO_1 | LED_1;
+
+    if(!sensorB_2 && estado_atual == BURACO_2)
         return AUMENTA_CONTADOR | ADD_PONTO;
-    if( (sensorB_1 || sensorB_3) && estado_atual == BURACO_2)
+    else if( (!sensorB_1 || !sensorB_3) && estado_atual == BURACO_2)
         return ZERA_PLACAR | RESET_PLACAR;
-    if(sensorB_3 && estado_atual == BURACO_3)
+    else if(estado_atual == BURACO_2)
+        return BURACO_2 | LED_2;
+
+    if(!sensorB_3 && estado_atual == BURACO_3)
         return AUMENTA_CONTADOR | ADD_PONTO;
-    if( (sensorB_1 || sensorB_2) && estado_atual == BURACO_3)
+    else if( (!sensorB_1 || !sensorB_2) && estado_atual == BURACO_3)
         return ZERA_PLACAR | RESET_PLACAR;
-    if(sensor_de_volta && estado_atual == AUMENTA_CONTADOR)
-        return SORTEIA | RESET_PLACAR;
-    if(sensor_de_volta && estado_atual == AUMENTA_CONTADOR)
-        return SORTEIA | RESET_PLACAR;
+    else if(estado_atual == BURACO_3)
+        return BURACO_3 | LED_3;
+
+    if(!sensor_de_volta && estado_atual == AUMENTA_CONTADOR)
+        return SORTEIA;
+    else if(estado_atual == AUMENTA_CONTADOR)
+        return AUMENTA_CONTADOR;
+
+    if(!sensor_de_volta && estado_atual == ZERA_PLACAR)
+        return SORTEIA ;
+    else if(estado_atual == ZERA_PLACAR)
+        return ZERA_PLACAR | RESET_PLACAR;
 
     return 0;
 }

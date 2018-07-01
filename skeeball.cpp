@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <bitset>
 
 #define addr_3 ((addr >> 12) & 1)
 #define addr_2 ((addr >> 8) & 15)

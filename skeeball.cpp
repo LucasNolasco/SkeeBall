@@ -28,13 +28,13 @@ using namespace std;
 void escreveHex(ofstream* arquivo, int addr, char byte)
 {
     *arquivo << ":01"; // Quantidade de bytes
-    *arquivo << hex << addr_3; // Escreve os endereços na memória
+    *arquivo << hex << addr_3; // Escreve os endereÃ§os na memÃ³ria
     *arquivo << hex << addr_2;
     *arquivo << hex << addr_1;
     *arquivo << hex << addr_0;
     *arquivo << 0;
     *arquivo << 0;
-    *arquivo << hex << byte_1; // Escreve as informações a serem salvas
+    *arquivo << hex << byte_1; // Escreve as informaÃ§Ãµes a serem salvas
     *arquivo << hex << byte_0;
 
     int checksum = 1 + (addr_3 * 16) + addr_2 + (addr_1 * 16) + addr_0 + (byte_1 * 16) + byte_0;
@@ -44,6 +44,13 @@ void escreveHex(ofstream* arquivo, int addr, char byte)
     *arquivo << hex << checksum_1;
     *arquivo << hex << checksum_0;
     *arquivo << endl;
+}
+
+void geraArquivoLogisim(ofstream* arquivoLogisim, char byte)
+{
+    *arquivoLogisim << hex << byte_1; // Escreve as informaÃ§Ãµes a serem salvas
+    *arquivoLogisim << hex << byte_0;
+    *arquivoLogisim << endl;
 }
 
 char maquinaEstados (int entrada)
@@ -58,7 +65,7 @@ char maquinaEstados (int entrada)
     int aleatorio = (entrada&(3<<9))>>9;
 
     if(timer)
-        return INICIAL
+        return INICIAL;
     if(botao && estado_atual == INICIAL)
         return ESPERA_BOTAO;
     if(!botao && estado_atual == ESPERA_BOTAO)
@@ -86,28 +93,27 @@ char maquinaEstados (int entrada)
     if(sensor_de_volta && estado_atual == AUMENTA_CONTADOR)
         return SORTEIA | RESET_PLACAR;
 
-    return 8191;
+    return 0;
 }
 
 int main()
 {
-    /*Grava arquivo .hex
     ofstream* arquivo = new ofstream;
     arquivo->open("saida.hex");
 
-    escreveHex(arquivo, 580, 0b01101111);
-
-    *arquivo << ":00000001FF" << endl;
-    arquivo->close();*/
+    ofstream *arquivoLogisim = new ofstream;
+    arquivoLogisim->open("arquivoLogisim.hex");
+    *arquivoLogisim << "v2.0 raw" << endl;
 
     for(int i =0; i < 8192; i++)
     {
-        maquinaEstados(8192);
+        escreveHex(arquivo, i, maquinaEstados(i));
+        geraArquivoLogisim(arquivoLogisim, maquinaEstados(i));
     }
 
-    int teste = (3<<9)>>9;
-    bitset<16> x((3<<9)>>9);
-    cout << ADD_PONTO << endl;
+    arquivoLogisim->close();
+    *arquivo << ":00000001FF" << endl;
+    arquivo->close();
 
     return 0;
 }

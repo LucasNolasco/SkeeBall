@@ -55,13 +55,13 @@ void geraArquivoLogisim(ofstream* arquivoLogisim, char byte)
 char maquinaEstados (int entrada)
 {
     int estado_atual = entrada&(7);
-    int botao = entrada&(1<<3);
-    int sensorB_1 = entrada&(1<<4);
+    int botao = entrada&(1<<4);
+    int sensorB_1 = entrada&(1<<3);
     int sensorB_2 = entrada&(1<<5);
     int sensorB_3 = entrada&(1<<6);
     int sensor_de_volta = entrada&(1<<7);
     int timer = entrada&(1<<8);
-    int aleatorio = (entrada&(3<<9))>>9;
+    int aleatorio = (entrada&(1<<9))>>9 + (entrada&(1<<11))>>10;
 
     if(timer)
         return INICIAL;
